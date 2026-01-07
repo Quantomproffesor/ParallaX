@@ -8,9 +8,9 @@ global _start
 
 section .data
     ; HARDCODED FACTORS
-    factor_lvl2 rq 1
-    factor_lvl4 rq 1
-    factor_lvl6 rq 1
+    factor_lvl2 dq 1
+    factor_lvl4 dq 1
+    factor_lvl6 dq 1
 
     ; BIT MAP LUT (00->2, 01->6, 10->4, 11->8)
     map_lut db 2, 6, 4, 8
@@ -66,16 +66,14 @@ _start:
     call sys_print_raw
 
     ; --- ARGUMENT CHECK ---
-    pop rcx
+    mov rcx, [rsp]
     cmp rcx, 2
     jl .exit_usage
     
-    pop rdx ; prog name
-    pop rdi ; input file
-    
+    mov rdi, [rsp+16]
+
     ; --- OPEN FILE ---
     mov rax, 2      ; sys_open
-    ; rdi already has filename
     mov rsi, 0      ; O_RDONLY
     mov rdx, 0
     syscall
@@ -538,34 +536,20 @@ math_szudzik_unpair: ; In: RAX. Out: RBX(X), RCX(Y)
     pop rdx
     ret
 
-math_qch_pair: ; ((y>>1)-1)*F + ((x>>1)-1)*2 + 2
-    shr rax, 1
-    dec rax
-    shr rbx, 1
-    dec rbx
-    push rax
-    mov rax, rbx
-    mul rdx
-    pop rbx
-    add rax, rbx
-    shl rax, 1
-    add rax, 2
+math_qch_pair: ; rax=y, rbx=x, rdx=F. Out: rax = y*F + x
+    mul rdx      ; rax = y * F
+    add rax, rbx ; rax = y * F + x
     ret
 
-math_qch_unpair: ; (w-2)/2 -> div F -> (rem+1)*2, (quo+1)*2
-    sub rax, 2
-    shr rax, 1
-    push r8
-    mov r8, rdx
-    xor rdx, rdx
-    div r8
-    pop r8
-    inc rax
-    shl rax, 1
-    mov rcx, rax ; Y
-    inc rdx
-    shl rdx, 1
-    mov rbx, rdx ; X
+math_qch_unpair: ; In: rax=w, rdx=F. Out: rbx=x, rcx=y
+    ; w = y*F + x
+    ; y = w / F (quotient)
+    ; x = w % F (remainder)
+    mov r9, rdx   ; Copy factor F to r9, because div uses rdx for remainder
+    xor rdx, rdx  ; Clear rdx for 128-bit division (rdx:rax)
+    div r9        ; rax = rax / r9 (quotient), rdx = rax % r9 (remainder)
+    mov rcx, rax  ; y = quotient
+    mov rbx, rdx  ; x = remainder
     ret
 
 util_unmap:
