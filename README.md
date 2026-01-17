@@ -109,3 +109,45 @@ Kernzin:
 “Ik combineer tags om een punt in een 2^N‑ruimte te activeren waar de informatie al vastligt. De base wijst het pad, de LUTs definiëren de ruimte, en unfold laat reconstructie toe.”
 
 Veiligheidsstructuur en shard‑mechanisme
+
+[Input: 64‑bit / 128‑bit] 
+        │
+        ▼
+   ┌─────────────┐
+   │    Tag/Base │  ← klein getal, alleen een adres in de vaste ruimte
+   └─────────────┘
+        │
+        ▼
+   ┌─────────────┐
+   │    LUTs     │  ← vaste, gedeelde structuur
+   │ (cascade)   │  ← meerdere niveaus, convergentie
+   └─────────────┘
+        │
+        ▼
+   ┌─────────────┐
+   │   Unfold    │  ← reconstructiepad
+   │  (regels)   │
+   └─────────────┘
+        │
+        ▼
+   ┌─────────────┐
+   │ Eindpunt    │  ← klein getal (bijv. 8‑bit)
+   │ betekenisloos │
+   └─────────────┘
+         [Tag1]           [Tag2]           [Tag3] ...
+           │                │                │
+           ▼                ▼                ▼
+        ┌───────────────┐
+        │ LUT cascade    │  ← combinaties van tags
+        └───────────────┘
+                   │
+                   ▼
+             ┌─────────────┐
+             │ Unfold pad  │
+             └─────────────┘
+                   │
+                   ▼
+             ┌─────────────┐
+             │  Eindpunt   │
+             │ (klein & uniek) │
+             └─────────────┘
