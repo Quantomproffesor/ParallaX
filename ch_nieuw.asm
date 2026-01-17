@@ -1,6 +1,7 @@
 nasm; lut_cascade.asm - NASM 64-bit Linux/WSL (elf64)
 ; Fixed warnings: added .note.GNU-stack for non-executable stack
-
+bits 64
+default rel
 section .note.GNU-stack noalloc noexec nowrite progbits  ; Fix executable stack warning
 
 section .data
@@ -240,3 +241,4 @@ g++ -std=c++17 -no-pie main.cpp lut_roadmap.o -o lut_roadmap
 Dependencies needed: none
 requirements.txt (empty):
 text# No dependencies needed
+
