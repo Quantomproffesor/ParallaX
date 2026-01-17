@@ -66,7 +66,7 @@ lut_roadmap_collapse:
 
     xor r8, r8
 .pair_loop:
-    cmp r8, r11d
+    cmp r8, r11
     jge .level_done
 
     movzx r9, byte [rsi + r8*2]     ; left
@@ -251,5 +251,6 @@ g++ -std=c++17 -no-pie main.cpp lut_roadmap.o -o lut_roadmap
 Dependencies needed: none
 requirements.txt (empty):
 text# No dependencies needed
+
 
 
