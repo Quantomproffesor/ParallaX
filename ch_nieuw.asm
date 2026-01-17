@@ -156,10 +156,15 @@ int main() {
 
     return 0;
 }
+
 Compile & Run (Linux / WSL / conda)
-Bashnasm -f elf64 lut_roadmap.asm -o lut_roadmap.o
+Bash
+
+nasm -f elf64 lut_roadmap.asm -o lut_roadmap.o
 g++ -std=c++17 -no-pie main.cpp lut_roadmap.o -o lut_roadmap
 ./lut_roadmap
+
+
 Warnings fixed
 
 integer constant too large: fixed by splitting literal if needed (but in this version it's smaller literal)
@@ -211,16 +216,21 @@ Compiler + Linker + Versions
 Compiler: g++ (GCC) 13.2.0 (or whatever conda provides)
 Linker: GNU ld (GNU Binutils) 2.39+ (bundled with GCC)
 How to compile:
-textnasm -f elf64 lut_roadmap.asm -o lut_roadmap.o
+
+nasm -f elf64 lut_roadmap.asm -o lut_roadmap.o
 g++ -std=c++17 -no-pie circlar_main2.cpp lut_roadmap.o -o lut_roadmap
+
 Dependencies needed: none
 requirements.txt (empty file):
 text# No dependencies needed
 
-Make LUT1 lower (around 10–90 instead of 4200–7800):nasmlut1 dd 10, 20, 30, 40
+Make LUT1 lower (around 10–90 instead of 4200–7800):
+nasm
+lut1 dd 10, 20, 30, 40
      dd 50, 60, 70, 80
      dd 90, 10, 20, 30
      dd 40, 50, 60, 70
+
 Shift big LUTs lower (average ~200k instead of ~500k):
 Change the final add in big_lut:nasmadd rdx, 100000                 ; change to add rdx, 50000 for lower middle
 Make final point even smaller (mod 16 instead of full byte):
@@ -241,4 +251,5 @@ g++ -std=c++17 -no-pie main.cpp lut_roadmap.o -o lut_roadmap
 Dependencies needed: none
 requirements.txt (empty):
 text# No dependencies needed
+
 
